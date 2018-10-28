@@ -4,7 +4,9 @@ namespace App\Repository;
 
 use App\Entity\Restaurant;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @method Restaurant|null find($id, $lockMode = null, $lockVersion = null)
@@ -19,32 +21,52 @@ class RestaurantRepository extends ServiceEntityRepository
         parent::__construct($registry, Restaurant::class);
     }
 
-//    /**
-//     * @return Restaurant[] Returns an array of Restaurant objects
-//     */
-    /*
-    public function findByExampleField($value)
+    /**
+     * @param Request $request
+     * @return array
+     */
+    public function applyRequestParametersFilter(Request $request): array
     {
-        return $this->createQueryBuilder('r')
-            ->andWhere('r.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('r.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+        $qb = $this->createQueryBuilder('restaurant');
+        foreach ($request->query as $key => $value) {
+            $this->setFilter($key, $value, $qb);
+        }
+        return  $qb->getQuery()->getResult();
 
-    /*
-    public function findOneBySomeField($value): ?Restaurant
-    {
-        return $this->createQueryBuilder('r')
-            ->andWhere('r.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
     }
-    */
+
+    /**
+     * @param $key
+     * @param $value
+     * @param QueryBuilder $qb
+     */
+    private function setFilter($key, $value, QueryBuilder $qb)
+    {
+        switch ($key) {
+            case $key === 'name':
+                $qb->andWhere($qb->expr()->like("restaurant.name", ':name'));
+                $qb->setParameter('name', $value);
+                break;
+            case $key === 'cousine':
+                $qb->andWhere($qb->expr()->eq("restaurant.cuisine", ':cuisine'));
+                $qb->setParameter('cuisine', $value);
+                break;
+            case $key === 'city':
+                $qb->andWhere($qb->expr()->eq("restaurant.city", ':city'));
+                $qb->setParameter('city', $value);
+                break;
+            case $key === 'search':
+                $qb->andWhere(
+                    $qb->expr()->orX(
+                        $qb->expr()->like('restaurant.name', ':name'),
+                        $qb->expr()->like('restaurant.city', ':city'),
+                        $qb->expr()->like('restaurant.cuisine', ':cuisine')
+                    )
+                );
+                $qb->setParameter('city', $value);
+                $qb->setParameter('cuisine', $value);
+                $qb->setParameter('name', $value);
+                break;
+        }
+    }
 }

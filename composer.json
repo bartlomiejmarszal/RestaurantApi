@@ -7,10 +7,12 @@
         "ext-iconv": "*",
         "ext-json": "^1.6",
         "mockery/mockery": "^1.2",
+        "sensio/framework-extra-bundle": "^5.2",
         "symfony/console": "*",
         "symfony/flex": "^1.1",
         "symfony/framework-bundle": "*",
         "symfony/orm-pack": "^1.0",
+        "symfony/serializer": "*",
         "symfony/yaml": "*"
     },
     "require-dev": {

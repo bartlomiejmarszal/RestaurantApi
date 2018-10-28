@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\RestaurantRepository")
@@ -18,28 +19,37 @@ class Restaurant
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups("display")
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups("display")
      */
     private $cuisine;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups("display")
      */
     private $city;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="float", length=255)
      */
     private $latitude;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="float", length=255)
      */
     private $longitude;
+
+    /**
+     * @var int
+     * @Groups("display")
+     */
+    private $distance;
 
     public function getId(): ?int
     {
@@ -82,27 +92,43 @@ class Restaurant
         return $this;
     }
 
-    public function getLatitude(): ?string
+    public function getLatitude(): ?float
     {
         return $this->latitude;
     }
 
-    public function setLatitude(string $latitude): self
+    public function setLatitude(float $latitude): self
     {
         $this->latitude = $latitude;
 
         return $this;
     }
 
-    public function getLongitude(): ?string
+    public function getLongitude(): ?float
     {
         return $this->longitude;
     }
 
-    public function setLongitude(string $longitude): self
+    public function setLongitude(float $longitude): self
     {
         $this->longitude = $longitude;
 
         return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDistance(): ?int
+    {
+        return $this->distance;
+    }
+
+    /**
+     * @param int $distance
+     */
+    public function setDistance(int $distance): void
+    {
+        $this->distance = $distance;
     }
 }

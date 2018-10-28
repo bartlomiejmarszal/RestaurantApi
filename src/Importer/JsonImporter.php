@@ -41,8 +41,8 @@ class JsonImporter implements ImporterInterface
                 $restaurant->setName($record['restaurantName']);
                 $restaurant->setCuisine($record['cuisine']);
                 $restaurant->setCity($record['city']);
-                $restaurant->setLatitude($record['latitude']);
-                $restaurant->setLongitude($record['longitude']);
+                $restaurant->setLatitude((float)$record['latitude']);
+                $restaurant->setLongitude((float)$record['longitude']);
                 $this->entityManager->persist($restaurant);
                 $output->writeln(sprintf('Restaurant %s added', $restaurant->getName()));
             } else {
