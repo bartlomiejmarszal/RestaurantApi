@@ -26,6 +26,10 @@ Place import data file in dircetory below:
        
        var/data_source/backend-data.json
        
+Using command
+
+        bin/console app:import
+       
 ### Usage
 
 Application provide endpoint that list restaurants from database. 
